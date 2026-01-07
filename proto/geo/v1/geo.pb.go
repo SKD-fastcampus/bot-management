@@ -773,7 +773,7 @@ const file_proto_geo_v1_geo_proto_rawDesc = "" +
 	"\x0eGetCountryInfo\x12\x0e.geo.IpRequest\x1a\x14.geo.CountryResponse\"\x00\x120\n" +
 	"\n" +
 	"GetASNInfo\x12\x0e.geo.IpRequest\x1a\x10.geo.ASNResponse\"\x00\x12<\n" +
-	"\x10CheckAnonymousIP\x12\x0e.geo.IpRequest\x1a\x16.geo.AnonymousResponse\"\x00BaZ_github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/adapter/handler/grpc/protob\x06proto3"
+	"\x10CheckAnonymousIP\x12\x0e.geo.IpRequest\x1a\x16.geo.AnonymousResponse\"\x00BaZ_github.com/SKD-fastcampus/bot-management/services/geo/internal/adapter/handler/grpc/protob\x06proto3"
 
 var (
 	file_proto_geo_v1_geo_proto_rawDescOnce sync.Once

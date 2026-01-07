@@ -3,7 +3,7 @@ package repository
 import (
 	"net"
 
-	"github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/domain/entity"
+	"github.com/SKD-fastcampus/bot-management/services/geo/internal/domain/entity"
 )
 
 // BaseGeoRepository는 모든 GeoIP 저장소가 공통으로 가지는 메서드를 정의합니다

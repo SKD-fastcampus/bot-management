@@ -3,9 +3,9 @@ package repository
 import (
 	"net"
 
-	"github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/domain/entity"
-	"github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/domain/repository"
-	"github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/infrastructure/geolite"
+	"github.com/SKD-fastcampus/bot-management/services/geo/internal/domain/entity"
+	"github.com/SKD-fastcampus/bot-management/services/geo/internal/domain/repository"
+	"github.com/SKD-fastcampus/bot-management/services/geo/internal/infrastructure/geolite"
 )
 
 // 기본 구현체 - 모든 구현체의 기초가 됩니다

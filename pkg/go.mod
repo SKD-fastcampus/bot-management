@@ -1,4 +1,4 @@
-module github.com/wekeepgrowing/semo-backend-monorepo/pkg
+module github.com/SKD-fastcampus/bot-management/pkg
 
 go 1.23.0
 

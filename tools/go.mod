@@ -1,4 +1,4 @@
-module github.com/wekeepgrowing/semo-backend-monorepo/tools
+module github.com/SKD-fastcampus/bot-management/tools
 
 go 1.23
 

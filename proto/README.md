@@ -19,7 +19,7 @@ syntax = "proto3";
 
 package semo.service_name.v1;
 
-option go_package = "github.com/wekeepgrowing/semo-backend-monorepo/proto/service_name/v1;service_namev1";
+option go_package = "github.com/SKD-fastcampus/bot-management/proto/service_name/v1;service_namev1";
 
 service ServiceName {
   rpc MethodName(RequestMessage) returns (ResponseMessage) {}

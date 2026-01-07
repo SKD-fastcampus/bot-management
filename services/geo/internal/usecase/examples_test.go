@@ -5,9 +5,9 @@ import (
 	"log"
 	"net"
 
-	"github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/adapter/repository"
-	"github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/domain/entity"
-	"github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/usecase"
+	"github.com/SKD-fastcampus/bot-management/services/geo/internal/adapter/repository"
+	"github.com/SKD-fastcampus/bot-management/services/geo/internal/domain/entity"
+	"github.com/SKD-fastcampus/bot-management/services/geo/internal/usecase"
 )
 
 // 이 파일은 단순한 예제입니다. 실제 데이터베이스 파일 경로를 적절히 변경해야 합니다.

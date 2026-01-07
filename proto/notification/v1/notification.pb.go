@@ -650,7 +650,7 @@ const file_proto_notification_v1_notification_proto_rawDesc = "" +
 	"\x14GetUserNotifications\x121.semo.notification.v1.GetUserNotificationsRequest\x1a2.semo.notification.v1.GetUserNotificationsResponse\"\x00\x12a\n" +
 	"\n" +
 	"MarkAsRead\x12'.semo.notification.v1.MarkAsReadRequest\x1a(.semo.notification.v1.MarkAsReadResponse\"\x00\x12`\n" +
-	"\tSubscribe\x12&.semo.notification.v1.SubscribeRequest\x1a'.semo.notification.v1.NotificationEvent\"\x000\x01BUZSgithub.com/wekeepgrowing/semo-backend-monorepo/proto/notification/v1;notificationv1b\x06proto3"
+	"\tSubscribe\x12&.semo.notification.v1.SubscribeRequest\x1a'.semo.notification.v1.NotificationEvent\"\x000\x01BUZSgithub.com/SKD-fastcampus/bot-management/proto/notification/v1;notificationv1b\x06proto3"
 
 var (
 	file_proto_notification_v1_notification_proto_rawDescOnce sync.Once

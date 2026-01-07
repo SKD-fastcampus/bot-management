@@ -1,4 +1,4 @@
-module github.com/wekeepgrowing/semo-backend-monorepo/proto
+module github.com/SKD-fastcampus/bot-management/proto
 
 go 1.23.6
 

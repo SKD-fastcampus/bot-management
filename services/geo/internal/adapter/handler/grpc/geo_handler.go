@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	proto "github.com/wekeepgrowing/semo-backend-monorepo/proto/geo/v1"
-	"github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/usecase"
+	proto "github.com/SKD-fastcampus/bot-management/proto/geo/v1"
+	"github.com/SKD-fastcampus/bot-management/services/geo/internal/usecase"
 )
 
 // GeoHandler는 지오로케이션 관련 gRPC 핸들러입니다

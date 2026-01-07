@@ -41,7 +41,7 @@ log:
 2. 서비스는 pkg/config 패키지를 사용하여 설정을 로드합니다.
 
 ```go
-import "github.com/wekeepgrowing/semo-backend-monorepo/pkg/config"
+import "github.com/SKD-fastcampus/bot-management/pkg/config"
 
 func main() {
     cfg, err := config.Load("auth-service")

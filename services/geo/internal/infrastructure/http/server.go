@@ -7,7 +7,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/wekeepgrowing/semo-backend-monorepo/pkg/logger"
+	"github.com/SKD-fastcampus/bot-management/pkg/logger"
 	"go.uber.org/zap"
 )
 

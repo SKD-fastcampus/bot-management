@@ -552,7 +552,7 @@ const file_proto_auth_v1_auth_proto_rawDesc = "" +
 	"\x05Login\x12\x1a.semo.auth.v1.LoginRequest\x1a\x1b.semo.auth.v1.LoginResponse\"\x00\x12K\n" +
 	"\bRegister\x12\x1d.semo.auth.v1.RegisterRequest\x1a\x1e.semo.auth.v1.RegisterResponse\"\x00\x12K\n" +
 	"\bValidate\x12\x1d.semo.auth.v1.ValidateRequest\x1a\x1e.semo.auth.v1.ValidateResponse\"\x00\x12H\n" +
-	"\aRefresh\x12\x1c.semo.auth.v1.RefreshRequest\x1a\x1d.semo.auth.v1.RefreshResponse\"\x00BEZCgithub.com/wekeepgrowing/semo-backend-monorepo/proto/auth/v1;authv1b\x06proto3"
+	"\aRefresh\x12\x1c.semo.auth.v1.RefreshRequest\x1a\x1d.semo.auth.v1.RefreshResponse\"\x00BEZCgithub.com/SKD-fastcampus/bot-management/proto/auth/v1;authv1b\x06proto3"
 
 var (
 	file_proto_auth_v1_auth_proto_rawDescOnce sync.Once

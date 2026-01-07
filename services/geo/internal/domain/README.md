@@ -79,7 +79,7 @@ package repository
 import (
     "context"
     
-    "github.com/wekeepgrowing/semo-backend-monorepo/services/api/internal/domain/entity"
+    "github.com/SKD-fastcampus/bot-management/services/api/internal/domain/entity"
 )
 
 type ItemRepository interface {

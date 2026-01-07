@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/wekeepgrowing/semo-backend-monorepo/pkg/logger"
+	"github.com/SKD-fastcampus/bot-management/pkg/logger"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"

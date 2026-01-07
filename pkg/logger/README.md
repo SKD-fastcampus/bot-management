@@ -16,7 +16,7 @@
 
 ```go
 import (
-    "github.com/wekeepgrowing/semo-backend-monorepo/pkg/logger"
+    "github.com/SKD-fastcampus/bot-management/pkg/logger"
 )
 
 func main() {
@@ -34,7 +34,7 @@ func main() {
 
 ```go
 import (
-    "github.com/wekeepgrowing/semo-backend-monorepo/pkg/logger"
+    "github.com/SKD-fastcampus/bot-management/pkg/logger"
 )
 
 func main() {
@@ -64,7 +64,7 @@ func main() {
 import (
     "time"
     
-    "github.com/wekeepgrowing/semo-backend-monorepo/pkg/logger"
+    "github.com/SKD-fastcampus/bot-management/pkg/logger"
     "gorm.io/gorm"
     gormlogger "gorm.io/gorm/logger"
 )
@@ -93,7 +93,7 @@ func main() {
 ```go
 import (
     "github.com/labstack/echo/v4"
-    "github.com/wekeepgrowing/semo-backend-monorepo/pkg/logger"
+    "github.com/SKD-fastcampus/bot-management/pkg/logger"
 )
 
 func main() {

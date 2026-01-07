@@ -4,7 +4,7 @@ package semo.notification.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/wekeepgrowing/semo-backend-monorepo/proto/notification/v1;notificationv1";
+option go_package = "github.com/SKD-fastcampus/bot-management/proto/notification/v1;notificationv1";
 
 service NotificationService {
   rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse) {}

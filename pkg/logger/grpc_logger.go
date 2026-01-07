@@ -184,7 +184,7 @@ func WithGrpcLogger(server *grpc.Server, logger *zap.Logger) *grpc.Server {
 //
 // import (
 //     "google.golang.org/grpc"
-//     "github.com/wekeepgrowing/semo-backend-monorepo/pkg/logger"
+//     "github.com/SKD-fastcampus/bot-management/pkg/logger"
 // )
 //
 // func NewGrpcServer(logger *zap.Logger) *grpc.Server {

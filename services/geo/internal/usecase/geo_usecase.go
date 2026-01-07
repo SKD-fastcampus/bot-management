@@ -3,8 +3,8 @@ package usecase
 import (
 	"net"
 
-	"github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/domain/entity"
-	"github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/domain/repository"
+	"github.com/SKD-fastcampus/bot-management/services/geo/internal/domain/entity"
+	"github.com/SKD-fastcampus/bot-management/services/geo/internal/domain/repository"
 )
 
 // GeoUseCase는 지오로케이션 관련 유스케이스를 담당합니다

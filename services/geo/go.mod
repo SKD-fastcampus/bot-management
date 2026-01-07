@@ -1,4 +1,4 @@
-module github.com/wekeepgrowing/semo-backend-monorepo/services/geo
+module github.com/SKD-fastcampus/bot-management/services/geo
 
 go 1.23.2
 

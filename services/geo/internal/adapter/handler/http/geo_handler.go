@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/usecase"
+	"github.com/SKD-fastcampus/bot-management/services/geo/internal/usecase"
 )
 
 // GeoHandler는 지오로케이션 관련 HTTP 핸들러입니다
