@@ -3,12 +3,12 @@ package aws
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/ecs/types"
-	"github.com/semo-backend-monorepo/services/bot-mgmt-server/internal/domain"
+	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
 )
 
 type ECSClient struct {

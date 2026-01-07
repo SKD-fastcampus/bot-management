@@ -5,8 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/semo-backend-monorepo/services/bot-mgmt-server/internal/domain"
-	"github.com/semo-backend-monorepo/services/bot-mgmt-server/internal/usecase"
+	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
+	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/usecase"
 )
 
 type TaskHandler struct {

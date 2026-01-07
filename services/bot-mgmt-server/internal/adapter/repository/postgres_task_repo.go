@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/semo-backend-monorepo/services/bot-mgmt-server/internal/domain"
+	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
 	"gorm.io/gorm"
 )
 
