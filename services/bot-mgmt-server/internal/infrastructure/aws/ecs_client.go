@@ -15,19 +15,20 @@ type ECSClient struct {
 	client     *ecs.Client
 	cluster    string
 	taskDef    string
-	subnetID   string
+	subnets    []string
 	secGroupID string
 }
 
-func NewECSClient(cfg aws.Config, cluster, taskDef, subnetID, secGroupID string) *ECSClient {
+func NewECSClient(cfg aws.Config, cluster, taskDef string, subnets []string, secGroupID string) *ECSClient {
 	return &ECSClient{
 		client:     ecs.NewFromConfig(cfg),
 		cluster:    cluster,
 		taskDef:    taskDef,
-		subnetID:   subnetID,
+		subnets:    subnets,
 		secGroupID: secGroupID,
 	}
 }
+
 
 func (c *ECSClient) RunBot(ctx context.Context, task *domain.AnalysisTask) (string, error) {
 	// Prepare environment overrides or command overrides if needed
@@ -38,11 +39,12 @@ func (c *ECSClient) RunBot(ctx context.Context, task *domain.AnalysisTask) (stri
 		LaunchType:     types.LaunchTypeFargate,
 		NetworkConfiguration: &types.NetworkConfiguration{
 			AwsvpcConfiguration: &types.AwsVpcConfiguration{
-				Subnets:        []string{c.subnetID},
+				Subnets:        c.subnets,
 				SecurityGroups: []string{c.secGroupID},
 				AssignPublicIp: types.AssignPublicIpEnabled, // Assuming public access needed for external URL
 			},
 		},
+
 		Overrides: &types.TaskOverride{
 			ContainerOverrides: []types.ContainerOverride{
 				{

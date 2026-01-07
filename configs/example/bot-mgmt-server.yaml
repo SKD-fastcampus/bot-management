@@ -1,0 +1,22 @@
+db:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "password"
+  name: "bot_db"
+
+aws:
+  region: "ap-northeast-2"
+
+ecs:
+  cluster: "default"
+  task_def: "bot-task"
+  subnets: 
+    - "subnet-xxxx"
+    - "subnet-yyyy"
+  sec_group: "sg-xxxx"
+
+
+server:
+  http:
+    port: 8080
