@@ -1,0 +1,57 @@
+name: "🐞 버그 리포트"
+description: "발견된 버그를 보고합니다"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 버그 리포트
+        발견하신 문제를 간단히 알려주세요. 정확한 정보는 빠른 해결에 도움이 됩니다.
+  
+  - type: textarea
+    id: description
+    attributes:
+      label: 버그 설명
+      description: 어떤 문제가 발생했는지 간략하게 설명해주세요.
+      placeholder: 로그인 버튼을 클릭했을 때 오류가 발생합니다.
+    validations:
+      required: true
+  
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 재현 방법
+      description: 어떻게 하면 이 문제를 재현할 수 있나요?
+      placeholder: |
+        1. '...' 페이지로 이동
+        2. '...' 버튼 클릭
+        3. 오류 발생
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: 환경
+      description: 어떤 환경에서 발생했나요? (해당되는 경우)
+      multiple: true
+      options:
+        - 웹 (Chrome)
+        - 웹 (Firefox)
+        - 웹 (Safari)
+        - 웹 (Edge)
+        - 모바일 앱 (iOS)
+        - 모바일 앱 (Android)
+        - 백엔드/서버
+        - 기타
+    validations:
+      required: false
+  
+  - type: textarea
+    id: additional
+    attributes:
+      label: 추가 정보
+      description: 스크린샷이나 로그 등 문제 해결에 도움이 될 정보를 공유해주세요.
+      placeholder: 스크린샷, 오류 메시지, 로그 등을 첨부해주세요.
+    validations:
+      required: false

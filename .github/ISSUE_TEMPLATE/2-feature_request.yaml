@@ -1,0 +1,48 @@
+name: "✨ 기능 요청"
+description: "새로운 기능이나 개선사항을 제안합니다"
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 기능 요청
+        새로운 기능이나 개선사항에 대한 아이디어를 공유해주세요.
+  
+  - type: textarea
+    id: problem
+    attributes:
+      label: 문제 상황
+      description: 이 기능이 해결하고자 하는 문제나 불편함은 무엇인가요?
+      placeholder: 현재 사용자 프로필을 수정할 때 페이지를 새로고침해야 합니다.
+    validations:
+      required: true
+  
+  - type: textarea
+    id: solution
+    attributes:
+      label: 제안하는 해결책
+      description: 어떻게 해결하면 좋을지 아이디어를 공유해주세요.
+      placeholder: AJAX를 사용하여 페이지 새로고침 없이 프로필을 업데이트합니다.
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 우선순위
+      description: 이 기능의 중요도는 어느 정도인가요?
+      options:
+        - 낮음 (있으면 좋음)
+        - 중간 (필요함)
+        - 높음 (시급함)
+    validations:
+      required: false
+  
+  - type: textarea
+    id: additional
+    attributes:
+      label: 추가 정보
+      description: 관련된 추가 정보나 스크린샷을 공유해주세요.
+      placeholder: 기능에 대한 스케치, 참고 사례 등
+    validations:
+      required: false

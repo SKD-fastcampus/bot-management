@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package publickey;
+
+option go_package = "authn-server/proto;publickey";
+
+// 빈 요청 메시지
+message Empty {}
+
+// 공개키 응답 메시지: PEM 인코딩된 공개키 문자열 반환
+message PublicKeyResponse {
+  string public_key = 1;
+}
+
+// ECDSA 공개키를 배포하는 서비스 정의
+service PublicKeyService {
+  rpc GetPublicKey(Empty) returns (PublicKeyResponse);
+}

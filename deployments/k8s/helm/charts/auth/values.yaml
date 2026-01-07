@@ -1,0 +1,89 @@
+# Default values for auth service
+replicaCount: 1
+
+image:
+  repository: semo/auth
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+
+podAnnotations: {}
+podLabels: {}
+
+service:
+  type: ClusterIP
+  httpPort: 8081
+  httpTargetPort: 8081
+  grpcPort: 8082
+  grpcTargetPort: 8082
+  annotations: {}
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: auth.semo.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+probes:
+  liveness:
+    path: /health
+    initialDelaySeconds: 10
+    periodSeconds: 10
+  readiness:
+    path: /health
+    initialDelaySeconds: 10
+    periodSeconds: 10
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+volumes:
+  logs:
+    enabled: false
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Config 설정
+config:
+  environment: dev
+  database:
+    host: postgres
+    port: 5432
+    name: semo_auth
+    user: postgres
+    
+# Secret 값 (프로덕션에서는 외부 시크릿 매니저 사용 권장)
+secrets:
+  database:
+    password: postgres
+  jwt:
+    secret: changeme-in-production
+  oauth:
+    google:
+      clientId: ""
+      clientSecret: ""
+    github:
+      clientId: ""
+      clientSecret: ""

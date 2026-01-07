@@ -1,0 +1,9 @@
+go 1.23.6
+
+use (
+	.
+	./pkg
+	./services/bot-mgmt-server
+	./services/geo
+	./tools
+)

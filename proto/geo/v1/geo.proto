@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package geo;
+
+option go_package = "github.com/wekeepgrowing/semo-backend-monorepo/services/geo/internal/adapter/handler/grpc/proto";
+
+// GeoService는 IP 주소에 대한 지리적 정보를 제공하는 서비스입니다
+service GeoService {
+  // GetGeoData는 IP 주소에 대한 종합적인 지리 정보를 반환합니다
+  rpc GetGeoData(IpRequest) returns (GeoDataResponse) {}
+  
+  // GetCityInfo는 IP 주소에 대한 도시 정보를 반환합니다
+  rpc GetCityInfo(IpRequest) returns (CityResponse) {}
+  
+  // GetCountryInfo는 IP 주소에 대한 국가 정보를 반환합니다
+  rpc GetCountryInfo(IpRequest) returns (CountryResponse) {}
+  
+  // GetASNInfo는 IP 주소에 대한 ASN 정보를 반환합니다
+  rpc GetASNInfo(IpRequest) returns (ASNResponse) {}
+  
+  // CheckAnonymousIP는 IP 주소가 익명 프록시인지 확인합니다
+  rpc CheckAnonymousIP(IpRequest) returns (AnonymousResponse) {}
+}
+
+// IpRequest는 IP 주소를 포함하는 요청 메시지입니다
+message IpRequest {
+  string ip = 1;
+}
+
+// GeoDataResponse는 종합적인 지리 정보를 포함하는 응답 메시지입니다
+message GeoDataResponse {
+  string ip_address = 1;
+  string city = 2;
+  string country_code = 3;
+  string country_name = 4;
+  string continent_code = 5;
+  double latitude = 6;
+  double longitude = 7;
+  string time_zone = 8;
+  uint32 asn = 9;
+  string isp = 10;
+  bool is_valid = 11;
+  bool is_anonymous = 12;
+  bool is_anonymous_vpn = 13;
+  bool is_tor_exit_node = 14;
+}
+
+// CityResponse는 도시 정보를 포함하는 응답 메시지입니다
+message CityResponse {
+  CityInfo city = 1;
+  CountryInfo country = 2;
+  ContinentInfo continent = 3;
+  LocationInfo location = 4;
+}
+
+// CountryResponse는 국가 정보를 포함하는 응답 메시지입니다
+message CountryResponse {
+  CountryInfo country = 1;
+  ContinentInfo continent = 2;
+}
+
+// ASNResponse는 ASN 정보를 포함하는 응답 메시지입니다
+message ASNResponse {
+  uint32 autonomous_system_number = 1;
+  string autonomous_system_organization = 2;
+}
+
+// AnonymousResponse는 익명 IP 확인 결과를 포함하는 응답 메시지입니다
+message AnonymousResponse {
+  bool is_anonymous = 1;
+  bool is_tor_exit_node = 2;
+  bool feature_support = 3;
+}
+
+// CityInfo는 도시 정보를 표현하는 메시지입니다
+message CityInfo {
+  uint32 geoname_id = 1;
+  map<string, string> names = 2;
+}
+
+// CountryInfo는 국가 정보를 표현하는 메시지입니다
+message CountryInfo {
+  uint32 geoname_id = 1;
+  bool is_in_european_union = 2;
+  string iso_code = 3;
+  map<string, string> names = 4;
+}
+
+// ContinentInfo는 대륙 정보를 표현하는 메시지입니다
+message ContinentInfo {
+  string code = 1;
+  uint32 geoname_id = 2;
+  map<string, string> names = 3;
+}
+
+// LocationInfo는 위치 정보를 표현하는 메시지입니다
+message LocationInfo {
+  double latitude = 1;
+  double longitude = 2;
+  string time_zone = 3;
+} 

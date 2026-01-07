@@ -1,0 +1,15 @@
+{{- if .Values.volumes.logs.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "auth.fullname" . }}-logs
+  labels:
+    {{- include "auth.labels" . | nindent 4 }}
+spec:
+  storageClassName: {{ include "auth.storageClass" . }}
+  accessModes:
+    {{- toYaml .Values.volumes.logs.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.volumes.logs.size }}
+{{- end }}

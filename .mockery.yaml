@@ -1,0 +1,58 @@
+with-expecter: true
+packages:
+  github.com/wekeepgrowing/semo-backend-monorepo/services/notification/internal/domain/repository:
+    interfaces:
+      NotificationRepository:
+        config:
+          dir: services/notification/mocks
+          outpkg: mocks
+          filename: notification_repository.go
+          mockname: MockNotificationRepository
+  github.com/wekeepgrowing/semo-backend-monorepo/services/notification/internal/usecase:
+    interfaces:
+      NotificationUsecase:
+        config:
+          dir: services/notification/mocks
+          outpkg: mocks
+          filename: notification_usecase.go
+          mockname: MockNotificationUsecase
+  github.com/wekeepgrowing/semo-backend-monorepo/services/api/internal/domain/repository:
+    interfaces:
+      UserRepository:
+        config:
+          dir: services/api/mocks
+          outpkg: mocks
+          filename: user_repository.go
+          mockname: MockUserRepository
+  github.com/wekeepgrowing/semo-backend-monorepo/services/api/internal/usecase:
+    interfaces:
+      UserUsecase:
+        config:
+          dir: services/api/mocks
+          outpkg: mocks
+          filename: user_usecase.go
+          mockname: MockUserUsecase
+  github.com/wekeepgrowing/semo-backend-monorepo/services/auth/internal/domain/repository:
+    interfaces:
+      UserRepository:
+        config:
+          dir: services/auth/mocks
+          outpkg: mocks
+          filename: user_repository.go
+          mockname: MockUserRepository
+  github.com/wekeepgrowing/semo-backend-monorepo/services/auth/internal/usecase:
+    interfaces:
+      AuthUsecase:
+        config:
+          dir: services/auth/mocks
+          outpkg: mocks
+          filename: auth_usecase.go
+          mockname: MockAuthUsecase
+  github.com/wekeepgrowing/semo-backend-monorepo/pkg/messaging:
+    interfaces:
+      RedisClient:
+        config:
+          dir: pkg/messaging/mocks
+          outpkg: mocks
+          filename: redis_client.go
+          mockname: MockRedisClient 

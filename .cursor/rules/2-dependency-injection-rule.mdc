@@ -1,0 +1,412 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Rule 1: 의존성 방향
+Controller는 Service에 의존
+Service는 Repository에 의존
+하위 계층은 상위 계층을 알지 못함
+
+Rule 2: 인터페이스 활용
+각 계층은 인터페이스를 통해 통신
+구현체가 아닌 인터페이스에 의존
+
+Rule 3: 생성자 주입
+의존성은 항상 생성자를 통해 주입
+전역 변수나 싱글톤 패턴 지양
+
+Rule 3-1: 예외적 싱글톤 패턴 허용
+Repository 초기화는 싱글톤 패턴을 사용합니다.
+전역객체 repositories.DBS 에서 모든 Repository 클라이언트에 접근 가능합니다.
+Config 초기화도 허용됩니다.
+전역객체 configs.Configs 에서 모든 설정값에 접근 가능합니다.
+
+Rule 4: 미들웨어 분리
+미들웨어는 컨텍스트에 데이터만 저장
+비즈니스 로직을 직접 호출하지 않음
+
+Rule 5: 의존성 생성 집중화
+모든 의존성은 애플리케이션 진입점에서 생성
+각 계층은 의존성 생성 책임 없음
+
+Rule 6: 순환 의존성 방지
+계층 간 순환 참조 금지
+필요시 이벤트/옵저버 패턴 활용
+
+Rule 7: 테스트 용이성
+모든 의존성은 모의 객체로 대체 가능
+단위 테스트에서 의존성 격리
+
+Rule 8: 관심사 분리
+Model: 데이터 구조 및 유효성 검증
+View: 사용자 인터페이스 표현
+Controller: HTTP 요청 처리 및 라우팅
+Service: 비즈니스 로직 처리
+Repository: 데이터 액세스
+
+Rule 1: Dependency Direction
+
+Controllers depend on Services
+
+Services depend on Repositories
+
+Lower layers do not know about upper layers
+
+Rule 2: Use of Interfaces
+
+Each layer communicates through interfaces
+
+Depend on interfaces, not implementations
+
+Rule 3: Constructor Injection
+
+Always inject dependencies through constructors
+
+Avoid global variables or singleton patterns
+
+Rule 3-1: Exception for Singleton Pattern
+
+Repository initialization uses singleton pattern
+
+Access all repository clients via repositories.DBS
+
+Config initialization is also allowed
+
+Access all config values via configs.Configs
+
+Rule 4: Middleware Separation
+
+Middleware only stores data in context
+
+Does not directly call business logic
+
+Rule 5: Centralized Dependency Creation
+
+All dependencies are created at the application entry point
+
+Each layer is not responsible for creating dependencies
+
+Rule 6: Circular Dependency Prevention
+
+No circular references between layers
+
+Use Event/Observer pattern if necessary
+
+Rule 7: Testability
+
+All dependencies can be replaced with mocks
+
+Isolate dependencies for unit testing
+
+Rule 8: Separation of Concerns
+
+Model: Data structure and validation
+
+View: User interface representation
+
+Controller: Handles HTTP requests and routing
+
+Service: Handles business logic
+
+Repository: Handles data access
+
+ルール1: 依存関係の方向
+
+コントローラーはサービスに依存する
+
+サービスはリポジトリに依存する
+
+下位層は上位層を知らない
+
+ルール2: インターフェースの利用
+
+各層はインターフェースを通じて通信する
+
+実装ではなくインターフェースに依存する
+
+ルール3: コンストラクタによる注入
+
+依存関係は常にコンストラクタで注入する
+
+グローバル変数やシングルトンパターンは避ける
+
+ルール3-1: シングルトンパターンの例外
+
+リポジトリの初期化はシングルトンパターンを使用
+
+repositories.DBSからすべてのリポジトリにアクセス可能
+
+設定の初期化も許可される
+
+configs.Configsから設定値にアクセス可能
+
+ルール4: ミドルウェアの分離
+
+ミドルウェアはコンテキストにデータを保存するだけ
+
+ビジネスロジックを直接呼び出さない
+
+ルール5: 依存関係の集中生成
+
+すべての依存関係はアプリケーションのエントリーポイントで生成
+
+各層は依存関係の生成責任を持たない
+
+ルール6: 循環依存の防止
+
+層間の循環参照を禁止
+
+必要に応じてイベント/オブザーバーパターンを使用
+
+ルール7: テストの容易さ
+
+すべての依存関係はモックに置き換え可能
+
+単体テストで依存関係を分離
+
+ルール8: 関心の分離
+
+モデル: データ構造と検証
+
+ビュー: ユーザーインターフェースの表示
+
+コントローラー: HTTPリクエストの処理とルーティング
+
+サービス: ビジネスロジックの処理
+
+リポジトリ: データアクセスの処理
+
+规则1：依赖方向
+
+控制器依赖服务
+
+服务依赖仓储（Repository）
+
+下层不应了解上层
+
+规则2：接口使用
+
+各层通过接口通信
+
+依赖接口，而非具体实现
+
+规则3：构造函数注入
+
+所有依赖通过构造函数注入
+
+避免全局变量和单例模式
+
+规则3-1：允许单例的例外情况
+
+仓储初始化使用单例模式
+
+所有仓储客户端通过 repositories.DBS 访问
+
+配置初始化也被允许
+
+所有配置信息通过 configs.Configs 获取
+
+规则4：中间件分离
+
+中间件只将数据存入上下文
+
+不直接调用业务逻辑
+
+规则5：依赖创建集中化
+
+所有依赖在应用入口处创建
+
+各层不负责创建依赖
+
+规则6：避免循环依赖
+
+禁止层与层之间的循环依赖
+
+如有必要，使用事件/观察者模式
+
+规则7：测试友好性
+
+所有依赖可被模拟对象替代
+
+单元测试中依赖完全隔离
+
+规则8：关注点分离
+
+模型：数据结构与验证
+
+视图：用户界面表现
+
+控制器：处理 HTTP 请求与路由
+
+服务：处理业务逻辑
+
+仓储：处理数据访问
+
+Regel 1: Abhängigkeitsrichtung
+
+Controller hängen von Services ab
+
+Services hängen von Repositories ab
+
+Untere Ebenen kennen obere Ebenen nicht
+
+Regel 2: Nutzung von Schnittstellen
+
+Jede Ebene kommuniziert über Schnittstellen
+
+Abhängigkeit von Schnittstellen, nicht Implementierungen
+
+Regel 3: Konstruktor-Injektion
+
+Abhängigkeiten immer über Konstruktoren injizieren
+
+Keine globalen Variablen oder Singleton-Muster
+
+Regel 3-1: Ausnahme für Singleton-Muster
+
+Repository-Initialisierung nutzt Singleton-Muster
+
+Zugriff auf alle Repositories über repositories.DBS
+
+Konfigurationsinitialisierung ebenfalls erlaubt
+
+Zugriff auf alle Konfigurationen über configs.Configs
+
+Regel 4: Trennung von Middleware
+
+Middleware speichert nur Daten im Kontext
+
+Keine direkte Aufrufe von Geschäftslogik
+
+Regel 5: Zentralisierte Abhängigkeits-Erstellung
+
+Alle Abhängigkeiten werden im Einstiegspunkt der App erstellt
+
+Jede Ebene ist nicht für Erstellung zuständig
+
+Regel 6: Vermeidung von zyklischen Abhängigkeiten
+
+Keine zyklischen Referenzen zwischen Ebenen
+
+Event-/Observer-Muster bei Bedarf verwenden
+
+Regel 7: Testbarkeit
+
+Alle Abhängigkeiten durch Mocks ersetzbar
+
+Abhängigkeiten für Unit-Tests isolieren
+
+Regel 8: Trennung der Verantwortlichkeiten
+
+Modell: Datenstruktur und Validierung
+
+Ansicht: Darstellung der Benutzeroberfläche
+
+Controller: Bearbeitung von HTTP-Anfragen und Routing
+
+Service: Geschäftslogik
+
+Repository: Datenzugriff
+
+Règle 1 : Direction des dépendances
+
+Les contrôleurs dépendent des services
+
+Les services dépendent des dépôts (repositories)
+
+Les couches inférieures ne connaissent pas les supérieures
+
+Règle 2 : Utilisation des interfaces
+
+Chaque couche communique via des interfaces
+
+Dépendre des interfaces, pas des implémentations
+
+Règle 3 : Injection par constructeur
+
+Injecter les dépendances via le constructeur uniquement
+
+Éviter les variables globales ou les singletons
+
+Règle 3-1 : Exception pour le singleton
+
+Initialisation des dépôts via le pattern singleton
+
+Accès à tous les clients de dépôt via repositories.DBS
+
+Initialisation de la configuration également permise
+
+Accès à toutes les configurations via configs.Configs
+
+Règle 4 : Séparation du middleware
+
+Le middleware ne fait que stocker les données dans le contexte
+
+Ne doit pas appeler directement la logique métier
+
+Règle 5 : Centralisation de la création des dépendances
+
+Toutes les dépendances sont créées au point d'entrée de l'application
+
+Les couches n'ont pas la responsabilité de les créer
+
+Règle 6 : Éviter les dépendances circulaires
+
+Aucune référence circulaire entre les couches
+
+Utiliser le pattern événementiel / observateur si nécessaire
+
+Règle 7 : Facilité de test
+
+Toutes les dépendances peuvent être remplacées par des mocks
+
+Isolation des dépendances pour les tests unitaires
+
+Règle 8 : Séparation des responsabilités
+
+Modèle : structure de données et validation
+
+Vue : représentation de l’interface utilisateur
+
+Contrôleur : gestion des requêtes HTTP et routage
+
+Service : traitement de la logique métier
+
+Dépôt : accès aux données
+
+Router/Handler: 라우팅 및 HTTP 요청 매핑
+Middleware: 요청 전/후 처리 (인증, 로깅, 트랜잭션)
+Controller: HTTP 요청 검증, 서비스 호출, 응답 포맷팅
+Service: 비즈니스 로직 처리
+Repository: 데이터 영속성 처리
+
+Router/Handler: Routing and mapping HTTP requests
+Middleware: Pre/Post-processing of requests (authentication, logging, transaction)
+Controller: Validate HTTP requests, call service, format response
+Service: Process business logic
+Repository: Handle data persistence
+
+Router/Handler：ルーティングおよびHTTPリクエストのマッピング
+Middleware：リクエストの前後処理（認証、ロギング、トランザクション）
+Controller：HTTPリクエストの検証、サービス呼び出し、レスポンスの整形
+Service：ビジネスロジックの処理
+Repository：データの永続化処理
+
+Router/Handler：路由和 HTTP 请求映射
+Middleware：请求的前/后处理（认证、日志、事务）
+Controller：验证 HTTP 请求，调用服务，格式化响应
+Service：处理业务逻辑
+Repository：处理数据持久化
+
+Router/Handler: Routing und HTTP-Anfragen-Mapping
+Middleware: Vor-/Nachbearbeitung von Anfragen (Authentifizierung, Logging, Transaktionen)
+Controller: Validierung der HTTP-Anfragen, Aufruf von Services, Formatierung der Antwort
+Service: Verarbeitung der Geschäftslogik
+Repository: Datenpersistenz behandeln
+
+Router/Handler : Routage et mappage des requêtes HTTP
+Middleware : Traitement avant/après des requêtes (authentification, journalisation, transaction)
+Controller : Validation des requêtes HTTP, appel au service, formatage de la réponse
+Service : Traitement de la logique métier
+Repository : Gestion de la persistance des données

@@ -1,0 +1,95 @@
+# Go 관련
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.o
+*.a
+/vendor/
+
+# Go 워크스페이스 및 모듈
+go.work.sum
+
+# 빌드 결과물
+/bin/
+/dist/
+tmp/
+__debug_bin
+
+# 로그
+*.log
+logs/
+
+# Air 라이브 리로딩
+.air.toml.tmp
+tmp/
+
+# macOS
+.DS_Store
+
+# IDE 및 에디터
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-workspace
+.project
+.settings/
+
+# 환경 변수 및 설정
+.env
+.env.*
+!.env.example
+
+# 설정 디렉토리
+/configs/dev/
+/configs/staging/
+/configs/prod/
+/configs/legacy/
+# 예외: example 디렉토리는 포함
+!/configs/example/
+
+# 시크릿 파일
+configs/dev/secrets.yaml
+configs/staging/secrets.yaml
+configs/prod/secrets.yaml
+
+# 테스트 및 커버리지
+coverage.txt
+coverage.html
+profile.out
+*.cover
+*.coverprofile
+
+# Docker
+.docker/data/
+docker-compose.override.yml
+
+# 자동 생성 코드 (선택적)
+# /proto/**/*.pb.go
+# /proto/**/*.pb.gw.go
+# /services/**/mocks/
+
+# 특정 서비스 아티팩트
+.dockerignore
+
+# 데이터베이스
+*.db
+*.sqlite
+
+# Kubernetes
+kubeconfig
+
+# 캐시 및 스크립트 출력물
+.cache/
+.task/
+*.out.json
+
+# 시크릿 파일
+*.pem
+*.key
+*.crt 

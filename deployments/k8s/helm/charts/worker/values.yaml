@@ -1,0 +1,57 @@
+# Default values for worker service
+replicaCount: 1
+
+image:
+  repository: semo/worker
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+
+podAnnotations: {}
+podLabels: {}
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+volumes:
+  data:
+    enabled: false
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Config 설정
+config:
+  environment: dev
+  database:
+    host: postgres
+    port: 5432
+    name: semo_api
+    user: postgres
+  redis:
+    host: redis
+    port: 6379
+  services:
+    api:
+      url: http://semo-api-service:8080
+    
+# Secret 값 (프로덕션에서는 외부 시크릿 매니저 사용 권장)
+secrets:
+  database:
+    password: postgres
+  redis:
+    password: ""

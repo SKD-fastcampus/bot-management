@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package semo.notification.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/wekeepgrowing/semo-backend-monorepo/proto/notification/v1;notificationv1";
+
+service NotificationService {
+  rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse) {}
+  rpc GetUserNotifications(GetUserNotificationsRequest) returns (GetUserNotificationsResponse) {}
+  rpc MarkAsRead(MarkAsReadRequest) returns (MarkAsReadResponse) {}
+  rpc Subscribe(SubscribeRequest) returns (stream NotificationEvent) {}
+}
+
+enum NotificationType {
+  NOTIFICATION_TYPE_UNSPECIFIED = 0;
+  NOTIFICATION_TYPE_EMAIL = 1;
+  NOTIFICATION_TYPE_SMS = 2;
+  NOTIFICATION_TYPE_PUSH = 3;
+}
+
+message SendNotificationRequest {
+  string user_id = 1;
+  string title = 2;
+  string content = 3;
+  NotificationType type = 4;
+}
+
+message SendNotificationResponse {
+  string notification_id = 1;
+  bool success = 2;
+}
+
+message GetUserNotificationsRequest {
+  string user_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message GetUserNotificationsResponse {
+  repeated Notification notifications = 1;
+  int32 total = 2;
+}
+
+message Notification {
+  string id = 1;
+  string user_id = 2;
+  string title = 3;
+  string content = 4;
+  NotificationType type = 5;
+  bool read = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+message MarkAsReadRequest {
+  string notification_id = 1;
+}
+
+message MarkAsReadResponse {
+  bool success = 1;
+}
+
+message SubscribeRequest {
+  string user_id = 1;
+}
+
+message NotificationEvent {
+  string event_id = 1;
+  Notification notification = 2;
+  google.protobuf.Timestamp event_time = 3;
+} 

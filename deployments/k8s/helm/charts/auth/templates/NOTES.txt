@@ -1,0 +1,28 @@
+Semo Authentication Service has been deployed!
+
+Service Information:
+--------------------
+HTTP Endpoint: {{ include "auth.fullname" . }}:{{ .Values.service.httpPort }}
+gRPC Endpoint: {{ include "auth.fullname" . }}:{{ .Values.service.grpcPort }}
+
+{{- if .Values.ingress.enabled }}
+
+Your service should be available at:
+{{- range .Values.ingress.hosts }}
+https://{{ .host }}
+{{- end }}
+{{- end }}
+
+To access the service from outside the cluster:
+{{- if contains "ClusterIP" .Values.service.type }}
+  kubectl port-forward service/{{ include "auth.fullname" . }} {{ .Values.service.httpPort }}:{{ .Values.service.httpPort }}
+  Then access the service at http://localhost:{{ .Values.service.httpPort }}
+{{- else if contains "NodePort" .Values.service.type }}
+  Get the NodePort:
+  kubectl get svc {{ include "auth.fullname" . }} -o jsonpath='{.spec.ports[0].nodePort}'
+  Then access using the NodePort and any node IP.
+{{- else if contains "LoadBalancer" .Values.service.type }}
+  Get the External IP:
+  kubectl get svc {{ include "auth.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+  Then access the service using the External IP and port {{ .Values.service.httpPort }}.
+{{- end }}

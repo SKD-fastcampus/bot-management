@@ -1,0 +1,43 @@
+service:
+  name: geo-service
+  version: 1.0.0
+  base_url: http://localhost:8083
+
+server:
+  port: 8083
+  timeout: 30s
+  debug: true
+  grpc:
+    port: 9093
+    timeout: 30s
+
+geolite:
+  db_path: services/geo/data
+
+jwt:
+  private_key: private_key
+  public_key: public_key
+  access_token_expiry: 5
+  refresh_token_expiry: 108000
+
+email:
+  sender_email: sender_email
+  smtp_host: smtp_host
+  smtp_port: 587
+  smtp_user: smtp_user
+  smtp_pass: smtp_pass
+
+log:
+  level: debug
+  format: json
+  output: stdout
+
+services:
+  auth:
+    host: localhost
+    port: 8082
+    timeout: 5s
+  notification:
+    host: localhost
+    port: 8080
+    timeout: 5s 

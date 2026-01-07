@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package semo.auth.v1;
+
+option go_package = "github.com/wekeepgrowing/semo-backend-monorepo/proto/auth/v1;authv1";
+
+service AuthService {
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc Register(RegisterRequest) returns (RegisterResponse) {}
+  rpc Validate(ValidateRequest) returns (ValidateResponse) {}
+  rpc Refresh(RefreshRequest) returns (RefreshResponse) {}
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  UserInfo user = 3;
+}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string name = 3;
+}
+
+message RegisterResponse {
+  string user_id = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+}
+
+message ValidateRequest {
+  string access_token = 1;
+}
+
+message ValidateResponse {
+  bool valid = 1;
+  UserInfo user = 2;
+}
+
+message RefreshRequest {
+  string refresh_token = 1;
+}
+
+message RefreshResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message UserInfo {
+  string id = 1;
+  string email = 2;
+  string name = 3;
+  string role = 4;
+} 
