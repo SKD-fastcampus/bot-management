@@ -12,26 +12,36 @@ import (
 
 	awsConfig "github.com/aws/aws-sdk-go-v2/config"
 
-	"github.com/labstack/echo/v4"
 	"github.com/SKD-fastcampus/bot-management/pkg/config"
 	"github.com/SKD-fastcampus/bot-management/pkg/logger"
 	httpHandler "github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/adapter/handler/http"
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/adapter/repository"
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
 	awsInfra "github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/infrastructure/aws"
+	"github.com/labstack/echo/v4"
 
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/usecase"
 
+	_ "github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/docs"
+	echoSwagger "github.com/swaggo/echo-swagger"
+
 	"go.uber.org/zap"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
+// @title Bot Management Server API
+// @version 1.0
+// @description API for managing smishing analysis bots.
+// @host localhost:8080
+// @BasePath /api/v1
 func main() {
+
 	// 1-1. Config Load
 	cfg, err := config.Load("bot-mgmt-server")
 	if err != nil {
-		// Just log error but continue if env vars are set? 
+		// Just log error but continue if env vars are set?
 		// Or panic? strict startup is better.
 		// Note: pkg/config attempts to load file, if not found returns error.
 		// If we want to support ONLY env vars, we might need to adjust pkg/config or handle error gracefully.
@@ -40,31 +50,53 @@ func main() {
 	}
 
 	// 1-2. Logger
-	log := logger.DefaultZapLogger()
+	logConfig := logger.Config{
+		Level:       cfg.GetString("logger.level"),
+		Format:      cfg.GetString("logger.format"),
+		Development: cfg.GetString("app.env") == "dev",
+	}
+	if logConfig.Level == "" {
+		logConfig.Level = "info" // Default
+	}
+	if logConfig.Format == "" {
+		logConfig.Format = "json" // Default
+	}
+
+	log, err := logger.NewZapLogger(logConfig)
+	if err != nil {
+		panic(fmt.Sprintf("Failed to initialize logger: %v", err))
+	}
 	defer log.Sync()
+
 	log.Info("Starting Bot Management Server")
 
 	// 2. Database
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Seoul",
-		cfg.GetString("db.host"), 
-		cfg.GetString("db.user"), 
-		cfg.GetString("db.password"), 
-		cfg.GetString("db.name"), 
+		cfg.GetString("db.host"),
+		cfg.GetString("db.user"),
+		cfg.GetString("db.password"),
+		cfg.GetString("db.name"),
 		cfg.GetString("db.port"))
-	
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database", zap.Error(err))
 	}
 
-	// Auto Migration 
+	// Auto Migration
 	if err := db.AutoMigrate(&domain.AnalysisTask{}); err != nil {
 		log.Fatal("Failed to migrate database", zap.Error(err))
 	}
 
-
 	// 3. AWS Config
-	awsCfg, err := awsConfig.LoadDefaultConfig(context.Background(), awsConfig.WithRegion(cfg.GetString("aws.region")))
+	awsOpts := []func(*awsConfig.LoadOptions) error{
+		awsConfig.WithRegion(cfg.GetString("aws.region")),
+	}
+	if profile := cfg.GetString("aws.profile"); profile != "" {
+		awsOpts = append(awsOpts, awsConfig.WithSharedConfigProfile(profile))
+	}
+
+	awsCfg, err := awsConfig.LoadDefaultConfig(context.Background(), awsOpts...)
 	if err != nil {
 		log.Fatal("Failed to load AWS config", zap.Error(err))
 	}
@@ -74,13 +106,13 @@ func main() {
 	ecsClient := awsInfra.NewECSClient(awsCfg,
 		cfg.GetString("ecs.cluster"),
 		cfg.GetString("ecs.task_def"),
+		cfg.GetString("ecs.container_name"),
 		cfg.GetStringSlice("ecs.subnets"),
 		cfg.GetString("ecs.sec_group"),
 	)
 
-
 	// 5. Usecase
-	taskUC := usecase.NewTaskUsecase(taskRepo, ecsClient)
+	taskUC := usecase.NewTaskUsecase(taskRepo, ecsClient, log)
 
 	// 6. Handlers
 	h := httpHandler.NewTaskHandler(taskUC)
@@ -89,6 +121,9 @@ func main() {
 	e := echo.New()
 	apiGroup := e.Group("/api/v1")
 	h.RegisterRoutes(apiGroup)
+
+	// Swagger
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	// 8. Background Workers
 	ctx, cancel := context.WithCancel(context.Background())

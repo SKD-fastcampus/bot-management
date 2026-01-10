@@ -29,6 +29,18 @@ type CreateTaskRequest struct {
 	RequestUUID string `json:"request_uuid"` // Can be JWT or simple UUID
 }
 
+// CreateTask godoc
+
+// @Summary Create a new analysis task
+// @Description Initiates a new smishing analysis task for a given URL
+// @Tags tasks
+// @Accept json
+// @Produce json
+// @Param request body CreateTaskRequest true "Create Task Request"
+// @Success 202 {object} domain.AnalysisTask
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /analyze [post]
 func (h *TaskHandler) CreateTask(c echo.Context) error {
 	var req CreateTaskRequest
 	if err := c.Bind(&req); err != nil {
@@ -47,6 +59,16 @@ func (h *TaskHandler) CreateTask(c echo.Context) error {
 	return c.JSON(http.StatusAccepted, task)
 }
 
+// GetStatus godoc
+// @Summary Get task status
+// @Description Retrieve the current status of an analysis task
+// @Tags tasks
+// @Produce json
+// @Param id path string true "Task ID" format(uuid)
+// @Success 200 {object} domain.AnalysisTask
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /status/{id} [get]
 func (h *TaskHandler) GetStatus(c echo.Context) error {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -69,6 +91,18 @@ type WebhookRequest struct {
 	Result string            `json:"result"`
 }
 
+// HandleWebhook godoc
+
+// @Summary Handle webhook update
+// @Description Update task status via webhook (Internal use)
+// @Tags tasks
+// @Accept json
+// @Produce json
+// @Param request body WebhookRequest true "Webhook Request"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /webhook [post]
 func (h *TaskHandler) HandleWebhook(c echo.Context) error {
 	var req WebhookRequest
 	if err := c.Bind(&req); err != nil {
@@ -90,3 +124,4 @@ func (h *TaskHandler) HandleWebhook(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]string{"message": "Status updated"})
 }
+

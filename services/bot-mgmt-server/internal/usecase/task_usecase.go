@@ -2,11 +2,11 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
+	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
 
 type TaskUsecase interface {
@@ -20,12 +20,14 @@ type TaskUsecase interface {
 type taskUsecase struct {
 	repo     domain.TaskRepository
 	executor domain.BotExecutor
+	logger   *zap.Logger
 }
 
-func NewTaskUsecase(repo domain.TaskRepository, executor domain.BotExecutor) TaskUsecase {
+func NewTaskUsecase(repo domain.TaskRepository, executor domain.BotExecutor, logger *zap.Logger) TaskUsecase {
 	return &taskUsecase{
 		repo:     repo,
 		executor: executor,
+		logger:   logger,
 	}
 }
 
@@ -50,9 +52,10 @@ func (u *taskUsecase) CreateTask(ctx context.Context, url, requestUUID string) (
 		bgCtx := context.Background()
 		extID, err := u.executor.RunBot(bgCtx, task)
 		if err != nil {
-			fmt.Printf("Failed to run bot for task %s: %v\n", task.ID, err)
+			u.logger.Error("Failed to run bot", zap.String("task_id", task.ID.String()), zap.Error(err))
 			u.UpdateTaskStatus(bgCtx, task.ID, domain.TaskStatusFailed, err.Error())
 		} else {
+
 			// Update with External ID
 			task.ExternalID = extID
 			task.Status = domain.TaskStatusRunning
@@ -93,9 +96,9 @@ func (u *taskUsecase) RetryFailedTasks(ctx context.Context) error {
 		task.RetryCount++
 		task.Status = domain.TaskStatusPending // Reset to Pending to be picked up or run immediately
 		task.UpdatedAt = time.Now()
-		
+
 		if err := u.repo.Update(ctx, task); err != nil {
-			fmt.Printf("Failed to update task retry count %s: %v\n", task.ID, err)
+			u.logger.Error("Failed to update task retry count", zap.String("task_id", task.ID.String()), zap.Error(err))
 			continue
 		}
 
@@ -126,20 +129,26 @@ func (u *taskUsecase) CheckRunningTasks(ctx context.Context) error {
 		if task.ExternalID == "" {
 			continue
 		}
-		
+
+		u.logger.Debug("Checking task status", zap.String("task_id", task.ID.String()), zap.String("external_id", task.ExternalID))
+
 		status, err := u.executor.GetBotStatus(ctx, task.ExternalID)
+
 		if err != nil {
-			fmt.Printf("Failed to check status for task %s: %v\n", task.ID, err)
+			u.logger.Error("Failed to check status", zap.String("task_id", task.ID.String()), zap.Error(err))
 			continue
 		}
 
 		if status != task.Status {
-			fmt.Printf("Updating status for task %s: %s -> %s\n", task.ID, task.Status, status)
+			u.logger.Info("Updating task status",
+				zap.String("task_id", task.ID.String()),
+				zap.String("old_status", string(task.Status)),
+				zap.String("new_status", string(status)))
 			task.Status = status
+
 			task.UpdatedAt = time.Now()
 			u.repo.Update(ctx, task)
 		}
 	}
 	return nil
 }
-

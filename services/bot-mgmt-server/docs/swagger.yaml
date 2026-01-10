@@ -1,0 +1,165 @@
+basePath: /api/v1
+definitions:
+  domain.AnalysisTask:
+    properties:
+      created_at:
+        type: string
+      external_id:
+        description: AWS Task ARN or similar
+        type: string
+      id:
+        type: string
+      request_uuid:
+        description: External User/Request UUID
+        type: string
+      result:
+        type: string
+      retry_count:
+        type: integer
+      status:
+        $ref: '#/definitions/domain.TaskStatus'
+      updated_at:
+        type: string
+      url:
+        type: string
+    type: object
+  domain.TaskStatus:
+    enum:
+    - PENDING
+    - RUNNING
+    - COMPLETED
+    - FAILED
+    type: string
+    x-enum-varnames:
+    - TaskStatusPending
+    - TaskStatusRunning
+    - TaskStatusCompleted
+    - TaskStatusFailed
+  http.CreateTaskRequest:
+    properties:
+      request_uuid:
+        description: Can be JWT or simple UUID
+        type: string
+      url:
+        type: string
+    type: object
+  http.WebhookRequest:
+    properties:
+      result:
+        type: string
+      status:
+        $ref: '#/definitions/domain.TaskStatus'
+      task_id:
+        description: Matches our internal ID
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API for managing smishing analysis bots.
+  title: Bot Management Server API
+  version: "1.0"
+paths:
+  /analyze:
+    post:
+      consumes:
+      - application/json
+      description: Initiates a new smishing analysis task for a given URL
+      parameters:
+      - description: Create Task Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/http.CreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/domain.AnalysisTask'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new analysis task
+      tags:
+      - tasks
+  /status/{id}:
+    get:
+      description: Retrieve the current status of an analysis task
+      parameters:
+      - description: Task ID
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AnalysisTask'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get task status
+      tags:
+      - tasks
+  /webhook:
+    post:
+      consumes:
+      - application/json
+      description: Update task status via webhook (Internal use)
+      parameters:
+      - description: Webhook Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/http.WebhookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Handle webhook update
+      tags:
+      - tasks
+swagger: "2.0"
