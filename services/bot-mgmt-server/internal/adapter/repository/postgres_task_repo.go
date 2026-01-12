@@ -3,18 +3,22 @@ package repository
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type postgresTaskRepository struct {
-	db *gorm.DB
+	db         *gorm.DB
+	maxRetries int
 }
 
 // NewPostgresTaskRepository creates a new postgresTaskRepository
-func NewPostgresTaskRepository(db *gorm.DB) domain.TaskRepository {
-	return &postgresTaskRepository{db: db}
+func NewPostgresTaskRepository(db *gorm.DB, maxRetries int) domain.TaskRepository {
+	return &postgresTaskRepository{
+		db:         db,
+		maxRetries: maxRetries,
+	}
 }
 
 func (r *postgresTaskRepository) Create(ctx context.Context, task *domain.AnalysisTask) error {
@@ -43,8 +47,8 @@ func (r *postgresTaskRepository) GetPendingTasks(ctx context.Context) ([]*domain
 
 func (r *postgresTaskRepository) GetFailedTasks(ctx context.Context) ([]*domain.AnalysisTask, error) {
 	var tasks []*domain.AnalysisTask
-	// RetryCount < 3 and Status = FAILED
-	if err := r.db.WithContext(ctx).Where("status = ? AND retry_count < ?", domain.TaskStatusFailed, 3).Find(&tasks).Error; err != nil {
+	// RetryCount < maxRetries and Status = FAILED
+	if err := r.db.WithContext(ctx).Where("status = ? AND retry_count < ?", domain.TaskStatusFailed, r.maxRetries).Find(&tasks).Error; err != nil {
 		return nil, err
 	}
 	return tasks, nil
@@ -58,3 +62,20 @@ func (r *postgresTaskRepository) GetRunningTasks(ctx context.Context) ([]*domain
 	return tasks, nil
 }
 
+func (r *postgresTaskRepository) GetActiveTaskByURL(ctx context.Context, url string) (*domain.AnalysisTask, error) {
+	var task domain.AnalysisTask
+	// Active status: PENDING or RUNNING or (FAILED and retry_count < maxRetries)
+	if err := r.db.WithContext(ctx).
+		Where("url = ? AND (status IN ? OR (status = ? AND retry_count < ?))",
+			url,
+			[]domain.TaskStatus{domain.TaskStatusPending, domain.TaskStatusRunning},
+			domain.TaskStatusFailed,
+			r.maxRetries).
+		First(&task).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil // No active task found
+		}
+		return nil, err
+	}
+	return &task, nil
+}

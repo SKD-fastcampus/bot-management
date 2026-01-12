@@ -38,6 +38,7 @@ type TaskRepository interface {
 	GetPendingTasks(ctx context.Context) ([]*AnalysisTask, error)
 	GetFailedTasks(ctx context.Context) ([]*AnalysisTask, error)
 	GetRunningTasks(ctx context.Context) ([]*AnalysisTask, error)
+	GetActiveTaskByURL(ctx context.Context, url string) (*AnalysisTask, error)
 }
 
 // BotExecutor defines the interface for running and checking bot tasks
@@ -45,4 +46,3 @@ type BotExecutor interface {
 	RunBot(ctx context.Context, task *AnalysisTask) (string, error) // Returns external task ID (e.g., ARN)
 	GetBotStatus(ctx context.Context, externalID string) (TaskStatus, error)
 }
-

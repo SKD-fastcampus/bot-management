@@ -2,11 +2,12 @@ package http
 
 import (
 	"net/http"
+	"net/url"
 
-	"github.com/google/uuid"
-	"github.com/labstack/echo/v4"
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/usecase"
+	"github.com/google/uuid"
+	"github.com/labstack/echo/v4"
 )
 
 type TaskHandler struct {
@@ -49,6 +50,15 @@ func (h *TaskHandler) CreateTask(c echo.Context) error {
 
 	if req.URL == "" {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "URL is required"})
+	}
+
+	// Validate URL format
+	parsedURL, err := url.Parse(req.URL)
+	if err != nil || parsedURL.Scheme == "" || parsedURL.Host == "" {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid URL format"})
+	}
+	if parsedURL.Scheme != "http" && parsedURL.Scheme != "https" {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "URL must use http or https scheme"})
 	}
 
 	task, err := h.usecase.CreateTask(c.Request().Context(), req.URL, req.RequestUUID)
@@ -124,4 +134,3 @@ func (h *TaskHandler) HandleWebhook(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]string{"message": "Status updated"})
 }
-

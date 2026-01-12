@@ -9,6 +9,7 @@ import (
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
 	"github.com/aws/aws-sdk-go-v2/service/ecs/types"
+	"go.uber.org/zap"
 )
 
 type ECSClient struct {
@@ -18,9 +19,10 @@ type ECSClient struct {
 	containerName string
 	subnets       []string
 	secGroupID    string
+	logger        *zap.Logger
 }
 
-func NewECSClient(cfg aws.Config, cluster, taskDef, containerName string, subnets []string, secGroupID string) *ECSClient {
+func NewECSClient(cfg aws.Config, cluster, taskDef, containerName string, subnets []string, secGroupID string, logger *zap.Logger) *ECSClient {
 	return &ECSClient{
 		client:        ecs.NewFromConfig(cfg),
 		cluster:       cluster,
@@ -28,6 +30,7 @@ func NewECSClient(cfg aws.Config, cluster, taskDef, containerName string, subnet
 		containerName: containerName,
 		subnets:       subnets,
 		secGroupID:    secGroupID,
+		logger:        logger,
 	}
 }
 
@@ -52,7 +55,7 @@ func (c *ECSClient) RunBot(ctx context.Context, task *domain.AnalysisTask) (stri
 					Name: aws.String(c.containerName),
 					Environment: []types.KeyValuePair{
 						{Name: aws.String("TARGET_URL"), Value: aws.String(task.URL)},
-						{Name: aws.String("REQUEST_UUID"), Value: aws.String(task.RequestUUID)},
+						{Name: aws.String("USER_ID"), Value: aws.String(task.RequestUUID)},
 					},
 				},
 			},
@@ -64,11 +67,14 @@ func (c *ECSClient) RunBot(ctx context.Context, task *domain.AnalysisTask) (stri
 		return "", err
 	}
 
-	if len(out.Tasks) == 0 {
-		return "", fmt.Errorf("no tasks started")
-	}
+	taskARN := *out.Tasks[0].TaskArn
+	c.logger.Info("Task started successfully",
+		zap.String("task_arn", taskARN),
+		zap.String("task_id", task.ID.String()),
+		zap.String("request_uuid", task.RequestUUID),
+		zap.String("url", task.URL))
 
-	return *out.Tasks[0].TaskArn, nil
+	return taskARN, nil
 }
 
 func (c *ECSClient) GetBotStatus(ctx context.Context, externalID string) (domain.TaskStatus, error) {

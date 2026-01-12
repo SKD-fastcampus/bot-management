@@ -19,6 +19,7 @@ import (
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
 	awsInfra "github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/infrastructure/aws"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/usecase"
 
@@ -102,13 +103,19 @@ func main() {
 	}
 
 	// 4. Infrastructure & Repositories
-	taskRepo := repository.NewPostgresTaskRepository(db)
+	maxRetries := cfg.GetInt("task.max_retries")
+	if maxRetries == 0 {
+		maxRetries = 3 // Default
+	}
+
+	taskRepo := repository.NewPostgresTaskRepository(db, maxRetries)
 	ecsClient := awsInfra.NewECSClient(awsCfg,
 		cfg.GetString("ecs.cluster"),
 		cfg.GetString("ecs.task_def"),
 		cfg.GetString("ecs.container_name"),
 		cfg.GetStringSlice("ecs.subnets"),
 		cfg.GetString("ecs.sec_group"),
+		log,
 	)
 
 	// 5. Usecase
@@ -119,6 +126,8 @@ func main() {
 
 	// 7. Echo Server
 	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 	apiGroup := e.Group("/api/v1")
 	h.RegisterRoutes(apiGroup)
 

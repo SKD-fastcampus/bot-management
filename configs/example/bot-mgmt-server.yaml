@@ -24,6 +24,9 @@ ecs:
     - "subnet-yyyy"
   sec_group: "sg-xxxx"
 
+task:
+  max_retries: 3
+
 
 server:
   http:

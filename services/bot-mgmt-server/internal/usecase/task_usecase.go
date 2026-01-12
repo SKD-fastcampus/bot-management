@@ -41,6 +41,15 @@ func (u *taskUsecase) CreateTask(ctx context.Context, url, requestUUID string) (
 		UpdatedAt:   time.Now(),
 	}
 
+	// Check if there is already an active task for this URL
+	if existingTask, err := u.repo.GetActiveTaskByURL(ctx, url); err == nil && existingTask != nil {
+		u.logger.Info("Returning existing active task for URL",
+			zap.String("url", url),
+			zap.String("task_id", existingTask.ID.String()),
+			zap.String("status", string(existingTask.Status)))
+		return existingTask, nil
+	}
+
 	if err := u.repo.Create(ctx, task); err != nil {
 		return nil, err
 	}
