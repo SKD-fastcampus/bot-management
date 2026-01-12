@@ -1,3 +1,7 @@
+app:
+  name: "bot-mgmt-server"
+  env: "dev"
+
 db:
   host: "localhost"
   port: 5432
