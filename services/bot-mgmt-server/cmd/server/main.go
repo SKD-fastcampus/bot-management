@@ -19,6 +19,7 @@ import (
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
 	awsInfra "github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/infrastructure/aws"
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/infrastructure/db"
+	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/infrastructure/firebase"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -109,8 +110,15 @@ func main() {
 		log,
 	)
 
+	firebaseVerifier, err := firebase.NewTokenVerifier(context.Background(), cfg)
+	if err != nil {
+		// Log error but maybe don't fail if firebase is optional?
+		// But here it seems critical for the new feature.
+		log.Fatal("Failed to initialize firebase verifier", zap.Error(err))
+	}
+
 	// 5. Usecase
-	taskUC := usecase.NewTaskUsecase(taskRepo, ecsClient, log)
+	taskUC := usecase.NewTaskUsecase(taskRepo, ecsClient, firebaseVerifier, log)
 
 	// 6. Handlers
 	h := httpHandler.NewTaskHandler(taskUC)
@@ -162,8 +170,12 @@ func main() {
 	}()
 
 	// 9. Start Server
+	port := cfg.GetString("server.http.port")
+	if port == "" {
+		port = "8080"
+	}
 	go func() {
-		if err := e.Start(":8080"); err != nil && err != http.ErrServerClosed {
+		if err := e.Start(":" + port); err != nil && err != http.ErrServerClosed {
 			log.Fatal("Shutting down server", zap.Error(err))
 		}
 	}()

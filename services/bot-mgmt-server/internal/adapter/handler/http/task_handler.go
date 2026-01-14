@@ -26,8 +26,10 @@ func (h *TaskHandler) RegisterRoutes(g *echo.Group) {
 }
 
 type CreateTaskRequest struct {
-	URL         string `json:"url"`
-	RequestUUID string `json:"request_uuid"` // Can be JWT or simple UUID
+	URL           string `json:"url"`
+	FirebaseToken string `json:"firebase_token"`
+	AnalysisID    string `json:"analysis_id"`
+	RequestUUID   string `json:"request_uuid"` // Optional/Legacy
 }
 
 // CreateTask godoc
@@ -61,7 +63,7 @@ func (h *TaskHandler) CreateTask(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "URL must use http or https scheme"})
 	}
 
-	task, err := h.usecase.CreateTask(c.Request().Context(), req.URL, req.RequestUUID)
+	task, err := h.usecase.CreateTask(c.Request().Context(), req.URL, req.RequestUUID, req.FirebaseToken, req.AnalysisID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}

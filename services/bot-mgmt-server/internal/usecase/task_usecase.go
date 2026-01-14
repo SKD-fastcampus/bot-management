@@ -2,15 +2,17 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
+	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/infrastructure/firebase"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
 type TaskUsecase interface {
-	CreateTask(ctx context.Context, url, requestUUID string) (*domain.AnalysisTask, error)
+	CreateTask(ctx context.Context, url, requestUUID, firebaseToken, analysisID string) (*domain.AnalysisTask, error)
 	GetTaskStatus(ctx context.Context, id uuid.UUID) (*domain.AnalysisTask, error)
 	UpdateTaskStatus(ctx context.Context, id uuid.UUID, status domain.TaskStatus, result string) error
 	RetryFailedTasks(ctx context.Context) error
@@ -20,25 +22,46 @@ type TaskUsecase interface {
 type taskUsecase struct {
 	repo     domain.TaskRepository
 	executor domain.BotExecutor
+	verifier firebase.TokenVerifier
 	logger   *zap.Logger
 }
 
-func NewTaskUsecase(repo domain.TaskRepository, executor domain.BotExecutor, logger *zap.Logger) TaskUsecase {
+func NewTaskUsecase(repo domain.TaskRepository, executor domain.BotExecutor, verifier firebase.TokenVerifier, logger *zap.Logger) TaskUsecase {
 	return &taskUsecase{
 		repo:     repo,
 		executor: executor,
+		verifier: verifier,
 		logger:   logger,
 	}
 }
 
-func (u *taskUsecase) CreateTask(ctx context.Context, url, requestUUID string) (*domain.AnalysisTask, error) {
+func (u *taskUsecase) CreateTask(ctx context.Context, url, requestUUID, firebaseToken, analysisID string) (*domain.AnalysisTask, error) {
+	// Verify Firebase Token if provided
+	print(firebaseToken)
+	if firebaseToken != "" {
+		if _, err := u.verifier.VerifyIDToken(ctx, firebaseToken); err != nil {
+			u.logger.Warn("Invalid firebase token", zap.Error(err))
+			return nil, fmt.Errorf("invalid firebase token: %w", err)
+		}
+	} else {
+		// Enforce token presence?
+		// For now, let's make it optional or strictly required as per "verify FirebaseToken" request.
+		// User said "receive ... and verify", implies it is required.
+		// However, I'll log warning for now or return error if strict.
+		// Let's assume strict for security if token is meant to be verified.
+		// BUT the user didn't say it's MANDATORY. Let's return error if empty for better security.
+		return nil, fmt.Errorf("firebase token is required")
+	}
+
 	task := &domain.AnalysisTask{
-		ID:          uuid.New(),
-		RequestUUID: requestUUID,
-		URL:         url,
-		Status:      domain.TaskStatusPending,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
+		ID:            uuid.New(),
+		RequestUUID:   requestUUID,
+		URL:           url,
+		FirebaseToken: firebaseToken,
+		AnalysisID:    analysisID,
+		Status:        domain.TaskStatusPending,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
 	}
 
 	// Check if there is already an active task for this URL

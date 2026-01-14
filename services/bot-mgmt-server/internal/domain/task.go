@@ -19,15 +19,17 @@ const (
 
 // AnalysisTask represents a smishing analysis task
 type AnalysisTask struct {
-	ID          uuid.UUID  `gorm:"type:uuid;primary_key;" json:"id"`
-	RequestUUID string     `gorm:"index" json:"request_uuid"` // External User/Request UUID
-	ExternalID  string     `gorm:"index" json:"external_id"`  // AWS Task ARN or similar
-	URL         string     `gorm:"not null" json:"url"`
-	Status      TaskStatus `gorm:"default:'PENDING'" json:"status"`
-	RetryCount  int        `gorm:"default:0" json:"retry_count"`
-	Result      string     `gorm:"type:text" json:"result,omitempty"`
-	CreatedAt   time.Time  `json:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at"`
+	ID            uuid.UUID  `gorm:"primary_key;" json:"id"`
+	RequestUUID   string     `gorm:"index" json:"request_uuid"`       // External User/Request UUID (Deprecated/Legacy use)
+	AnalysisID    string     `gorm:"index" json:"analysis_id"`        // Search Server's DB PK
+	FirebaseToken string     `gorm:"type:text" json:"firebase_token"` // Firebase User Token
+	ExternalID    string     `gorm:"index" json:"external_id"`        // AWS Task ARN or similar
+	URL           string     `gorm:"not null" json:"url"`
+	Status        TaskStatus `gorm:"default:'PENDING'" json:"status"`
+	RetryCount    int        `gorm:"default:0" json:"retry_count"`
+	Result        string     `gorm:"type:text" json:"result,omitempty"`
+	CreatedAt     time.Time  `json:"created_at"`
+	UpdatedAt     time.Time  `json:"updated_at"`
 }
 
 // TaskRepository defines the interface for task persistence

@@ -23,6 +23,7 @@ ecs:
   task_def: "bot-task"
   container_name: "bot-container"
   subnets: 
+
     - "subnet-xxxx"
     - "subnet-yyyy"
   sec_group: "sg-xxxx"
@@ -34,3 +35,7 @@ task:
 server:
   http:
     port: 8080
+
+# Firebase (Optional)
+firebase:
+  credentials_file: "" # Path to service account key file. If empty, uses GOOGLE_APPLICATION_CREDENTIALS env var.
