@@ -18,6 +18,7 @@ import (
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/adapter/repository"
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
 	awsInfra "github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/infrastructure/aws"
+	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/infrastructure/db"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -27,9 +28,6 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	"go.uber.org/zap"
-
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 // @title Bot Management Server API
@@ -72,20 +70,13 @@ func main() {
 	log.Info("Starting Bot Management Server")
 
 	// 2. Database
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Seoul",
-		cfg.GetString("db.host"),
-		cfg.GetString("db.user"),
-		cfg.GetString("db.password"),
-		cfg.GetString("db.name"),
-		cfg.GetString("db.port"))
-
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	database, err := db.NewDB(cfg)
 	if err != nil {
 		log.Fatal("Failed to connect to database", zap.Error(err))
 	}
 
 	// Auto Migration
-	if err := db.AutoMigrate(&domain.AnalysisTask{}); err != nil {
+	if err := database.AutoMigrate(&domain.AnalysisTask{}); err != nil {
 		log.Fatal("Failed to migrate database", zap.Error(err))
 	}
 
@@ -108,7 +99,7 @@ func main() {
 		maxRetries = 3 // Default
 	}
 
-	taskRepo := repository.NewPostgresTaskRepository(db, maxRetries)
+	taskRepo := repository.NewGormTaskRepository(database, maxRetries)
 	ecsClient := awsInfra.NewECSClient(awsCfg,
 		cfg.GetString("ecs.cluster"),
 		cfg.GetString("ecs.task_def"),
