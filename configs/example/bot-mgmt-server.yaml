@@ -3,6 +3,7 @@ app:
   env: "dev"
 
 db:
+  driver: "postgres" # postgres, mysql
   host: "localhost"
   port: 5432
   user: "postgres"
@@ -13,7 +14,6 @@ logger:
   level: "debug"
   format: "console" # Easier to read in dev
 
-
 aws:
   region: "ap-northeast-2"
   profile: "bot-mgmt"
@@ -23,7 +23,6 @@ ecs:
   task_def: "bot-task"
   container_name: "bot-container"
   subnets: 
-
     - "subnet-xxxx"
     - "subnet-yyyy"
   sec_group: "sg-xxxx"
