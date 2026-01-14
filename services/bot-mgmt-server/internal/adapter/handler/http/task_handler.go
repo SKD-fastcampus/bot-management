@@ -3,6 +3,7 @@ package http
 import (
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain"
 	"github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/usecase"
@@ -62,6 +63,8 @@ func (h *TaskHandler) CreateTask(c echo.Context) error {
 	if parsedURL.Scheme != "http" && parsedURL.Scheme != "https" {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "URL must use http or https scheme"})
 	}
+
+	req.FirebaseToken = strings.TrimPrefix(req.FirebaseToken, "Bearer ")
 
 	task, err := h.usecase.CreateTask(c.Request().Context(), req.URL, req.RequestUUID, req.FirebaseToken, req.AnalysisID)
 	if err != nil {
