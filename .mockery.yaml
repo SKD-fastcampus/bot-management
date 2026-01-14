@@ -55,4 +55,18 @@ packages:
           dir: pkg/messaging/mocks
           outpkg: mocks
           filename: redis_client.go
-          mockname: MockRedisClient 
+          mockname: MockRedisClient
+  github.com/SKD-fastcampus/bot-management/services/bot-mgmt-server/internal/domain:
+    interfaces:
+      TaskRepository:
+        config:
+          dir: services/bot-mgmt-server/mocks
+          outpkg: mocks
+          filename: task_repository.go
+          mockname: MockTaskRepository
+      BotExecutor:
+        config:
+          dir: services/bot-mgmt-server/mocks
+          outpkg: mocks
+          filename: bot_executor.go
+          mockname: MockBotExecutor 
