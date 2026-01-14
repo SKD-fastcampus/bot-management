@@ -1,29 +1,35 @@
 basePath: /api/v1
 definitions:
-  domain.AnalysisTask:
+  github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.AnalysisTask:
     properties:
+      analysis_id:
+        description: Search Server's DB PK
+        type: string
       created_at:
         type: string
       external_id:
         description: AWS Task ARN or similar
         type: string
+      firebase_token:
+        description: Firebase User Token
+        type: string
       id:
         type: string
       request_uuid:
-        description: External User/Request UUID
+        description: External User/Request UUID (Deprecated/Legacy use)
         type: string
       result:
         type: string
       retry_count:
         type: integer
       status:
-        $ref: '#/definitions/domain.TaskStatus'
+        $ref: '#/definitions/github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.TaskStatus'
       updated_at:
         type: string
       url:
         type: string
     type: object
-  domain.TaskStatus:
+  github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.TaskStatus:
     enum:
     - PENDING
     - RUNNING
@@ -35,20 +41,24 @@ definitions:
     - TaskStatusRunning
     - TaskStatusCompleted
     - TaskStatusFailed
-  http.CreateTaskRequest:
+  internal_adapter_handler_http.CreateTaskRequest:
     properties:
+      analysis_id:
+        type: string
+      firebase_token:
+        type: string
       request_uuid:
-        description: Can be JWT or simple UUID
+        description: Optional/Legacy
         type: string
       url:
         type: string
     type: object
-  http.WebhookRequest:
+  internal_adapter_handler_http.WebhookRequest:
     properties:
       result:
         type: string
       status:
-        $ref: '#/definitions/domain.TaskStatus'
+        $ref: '#/definitions/github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.TaskStatus'
       task_id:
         description: Matches our internal ID
         type: string
@@ -71,14 +81,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/http.CreateTaskRequest'
+          $ref: '#/definitions/internal_adapter_handler_http.CreateTaskRequest'
       produces:
       - application/json
       responses:
         "202":
           description: Accepted
           schema:
-            $ref: '#/definitions/domain.AnalysisTask'
+            $ref: '#/definitions/github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.AnalysisTask'
         "400":
           description: Bad Request
           schema:
@@ -110,7 +120,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.AnalysisTask'
+            $ref: '#/definitions/github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.AnalysisTask'
         "400":
           description: Bad Request
           schema:
@@ -137,7 +147,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/http.WebhookRequest'
+          $ref: '#/definitions/internal_adapter_handler_http.WebhookRequest'
       produces:
       - application/json
       responses:

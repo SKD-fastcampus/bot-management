@@ -35,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/http.CreateTaskRequest"
+                            "$ref": "#/definitions/internal_adapter_handler_http.CreateTaskRequest"
                         }
                     }
                 ],
@@ -43,7 +43,7 @@ const docTemplate = `{
                     "202": {
                         "description": "Accepted",
                         "schema": {
-                            "$ref": "#/definitions/domain.AnalysisTask"
+                            "$ref": "#/definitions/github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.AnalysisTask"
                         }
                     },
                     "400": {
@@ -91,7 +91,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.AnalysisTask"
+                            "$ref": "#/definitions/github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.AnalysisTask"
                         }
                     },
                     "400": {
@@ -135,7 +135,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/http.WebhookRequest"
+                            "$ref": "#/definitions/internal_adapter_handler_http.WebhookRequest"
                         }
                     }
                 ],
@@ -172,9 +172,13 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.AnalysisTask": {
+        "github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.AnalysisTask": {
             "type": "object",
             "properties": {
+                "analysis_id": {
+                    "description": "Search Server's DB PK",
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -182,11 +186,15 @@ const docTemplate = `{
                     "description": "AWS Task ARN or similar",
                     "type": "string"
                 },
+                "firebase_token": {
+                    "description": "Firebase User Token",
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
                 "request_uuid": {
-                    "description": "External User/Request UUID",
+                    "description": "External User/Request UUID (Deprecated/Legacy use)",
                     "type": "string"
                 },
                 "result": {
@@ -196,7 +204,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "status": {
-                    "$ref": "#/definitions/domain.TaskStatus"
+                    "$ref": "#/definitions/github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.TaskStatus"
                 },
                 "updated_at": {
                     "type": "string"
@@ -206,7 +214,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.TaskStatus": {
+        "github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.TaskStatus": {
             "type": "string",
             "enum": [
                 "PENDING",
@@ -221,11 +229,17 @@ const docTemplate = `{
                 "TaskStatusFailed"
             ]
         },
-        "http.CreateTaskRequest": {
+        "internal_adapter_handler_http.CreateTaskRequest": {
             "type": "object",
             "properties": {
+                "analysis_id": {
+                    "type": "string"
+                },
+                "firebase_token": {
+                    "type": "string"
+                },
                 "request_uuid": {
-                    "description": "Can be JWT or simple UUID",
+                    "description": "Optional/Legacy",
                     "type": "string"
                 },
                 "url": {
@@ -233,14 +247,14 @@ const docTemplate = `{
                 }
             }
         },
-        "http.WebhookRequest": {
+        "internal_adapter_handler_http.WebhookRequest": {
             "type": "object",
             "properties": {
                 "result": {
                     "type": "string"
                 },
                 "status": {
-                    "$ref": "#/definitions/domain.TaskStatus"
+                    "$ref": "#/definitions/github_com_SKD-fastcampus_bot-management_services_bot-mgmt-server_internal_domain.TaskStatus"
                 },
                 "task_id": {
                     "description": "Matches our internal ID",
