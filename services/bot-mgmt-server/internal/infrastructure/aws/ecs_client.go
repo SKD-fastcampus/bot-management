@@ -56,6 +56,7 @@ func (c *ECSClient) RunBot(ctx context.Context, task *domain.AnalysisTask) (stri
 					Environment: []types.KeyValuePair{
 						{Name: aws.String("TARGET_URL"), Value: aws.String(task.URL)},
 						{Name: aws.String("USER_ID"), Value: aws.String(task.RequestUUID)},
+						{Name: aws.String("PRIMARY_KEY"), Value: aws.String(task.AnalysisID)},
 					},
 				},
 			},

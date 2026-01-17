@@ -17,9 +17,10 @@ import (
 func TestCreateTask_DuplicateURL(t *testing.T) {
 	mockRepo := new(mocks.MockTaskRepository)
 	mockExecutor := new(mocks.MockBotExecutor)
+	mockVerifier := new(mocks.MockTokenVerifier)
 	logger := zap.NewNop()
 
-	u := usecase.NewTaskUsecase(mockRepo, mockExecutor, nil, logger)
+	u := usecase.NewTaskUsecase(mockRepo, mockExecutor, mockVerifier, logger)
 
 	ctx := context.Background()
 	url := "http://example.com"
@@ -36,6 +37,7 @@ func TestCreateTask_DuplicateURL(t *testing.T) {
 	}
 
 	mockRepo.On("GetActiveTaskByURL", ctx, url).Return(existingTask, nil)
+	mockVerifier.On("VerifyIDToken", ctx, "dummy-token").Return(nil, nil)
 
 	// Call CreateTask
 	result, err := u.CreateTask(ctx, url, reqUUID, "dummy-token", "dummy-analysis-id")
@@ -52,9 +54,10 @@ func TestCreateTask_DuplicateURL(t *testing.T) {
 func TestCreateTask_NewURL(t *testing.T) {
 	mockRepo := new(mocks.MockTaskRepository)
 	mockExecutor := new(mocks.MockBotExecutor)
+	mockVerifier := new(mocks.MockTokenVerifier)
 	logger := zap.NewNop()
 
-	u := usecase.NewTaskUsecase(mockRepo, mockExecutor, nil, logger)
+	u := usecase.NewTaskUsecase(mockRepo, mockExecutor, mockVerifier, logger)
 
 	ctx := context.Background()
 	url := "http://example.com/new"
@@ -62,6 +65,7 @@ func TestCreateTask_NewURL(t *testing.T) {
 
 	// Mock GetActiveTaskByURL to return nil (no active task)
 	mockRepo.On("GetActiveTaskByURL", ctx, url).Return((*domain.AnalysisTask)(nil), nil)
+	mockVerifier.On("VerifyIDToken", ctx, "dummy-token").Return(nil, nil)
 
 	// Mock Create to succeed
 	mockRepo.On("Create", ctx, mock.MatchedBy(func(task *domain.AnalysisTask) bool {

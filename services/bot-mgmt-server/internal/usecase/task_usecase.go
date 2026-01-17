@@ -37,7 +37,6 @@ func NewTaskUsecase(repo domain.TaskRepository, executor domain.BotExecutor, ver
 
 func (u *taskUsecase) CreateTask(ctx context.Context, url, requestUUID, firebaseToken, analysisID string) (*domain.AnalysisTask, error) {
 	// Verify Firebase Token if provided
-	print(firebaseToken)
 	if firebaseToken != "" {
 		if _, err := u.verifier.VerifyIDToken(ctx, firebaseToken); err != nil {
 			u.logger.Warn("Invalid firebase token", zap.Error(err))
